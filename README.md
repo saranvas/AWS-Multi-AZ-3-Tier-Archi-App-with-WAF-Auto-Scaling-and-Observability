@@ -1,4 +1,9 @@
-<h1>OVERVIEW</h1>
+<h1>1. ARCHITECTURE DIAGRAM</h1>
+
+<img width="14618" height="10348" alt="Code Analysis (5)" src="https://github.com/user-attachments/assets/339fcdfb-8030-4ad4-b5f2-e1eeb937259e" />
+
+
+<h1>2. OVERVIEW</h1>
 
 This project implements a multi-AZ 3-tier architecture on AWS with an internet-facing Application Load Balancer fronted by AWS WAF, auto-scaled EC2 instances distributed across availability zones for the web and application tiers, and a **RDS** primary-replica cluster isolated in private subnets for the database tier. Traffic enters through **WAF**, is routed by the **ALB** to the **EC2** tier based on health checks, and database access remains restricted to the private network boundary. Full observability is enabled through **ALB access logging**, **connection logging** and **health check logging** to **S3**, **VPC Flow Logs** to **CloudWatch**, and custom **CloudWatch dashboards** tracking **EC2**, internet facing **ALB**, and **Aurora** performance metrics, ensuring visibility into traffic patterns, security events, and backend resource health.
 
