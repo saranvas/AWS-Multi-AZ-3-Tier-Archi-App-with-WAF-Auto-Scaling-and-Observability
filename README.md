@@ -103,6 +103,25 @@ This project implements a multi-AZ 3-tier architecture on AWS with an internet-f
 - Real operational monitoring with live traffic logs, **not lab screenshots**
 
 
+## 💰 Estimated Monthly Cost
+
+| Service | Configuration | Monthly Cost (approx) |
+|---------|--------------|----------------------|
+| EC2 (4x t2.micro) | On-Demand | $30 |
+| RDS MySQL Multi-AZ | db.t3.micro | $30 |
+| ALB (2x) | Standard pricing | $36 |
+| NAT Gateway | In 1 AZ | $32 |
+| Data Transfer | Est. 100GB/mo | $9 |
+| S3 Storage (logs) | 10GB | $0.23 |
+| CloudWatch | Custom metrics + logs | $10 |
+| **Total** | | **~$150-180/month** |
+
+**Cost Optimization Opportunities:**
+- Replacing 2 NAT GWs with VPC endpoints does remove most of that $64
+- Multi-AZ RI/Standard Savings Plan on RDS can cut 30–40% depending on term/region.
+- Dropping to 1 NAT GW cuts ~half NAT cost but sacrifices AZ-level NAT redundancy.
+
+
 <h1>3. OBSERVABILITY & MONITORING</h1>
 
 - VPC Flow Logs enabled to capture ALL traffic at the VPC level for network troubleshooting and security analysis (delivered to CloudWatch Logs).
