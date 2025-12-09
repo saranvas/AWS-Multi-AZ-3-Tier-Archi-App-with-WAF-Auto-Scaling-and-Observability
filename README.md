@@ -53,6 +53,9 @@ Dashboard confirms active inspection and rule execution at the edge, showing blo
 
 <img width="5061" height="3848" alt="Code Analysis (3)" src="https://github.com/user-attachments/assets/86a529c8-22bf-4559-a787-fdfc94da0810" />
 
+<h2>5.3 WAF Runtime Validation (sqlmap Block Test)</h2>
+<img width="690" height="131" alt="Screenshot 2025-12-09 124638" src="https://github.com/user-attachments/assets/636c7404-3c14-4298-9d48-4edc1c1c044b" />
+A simulated attack request using the sqlmap/1.7 scanner signature was sent to the external ALB. WAF intercepted the request and returned 403 Forbidden, confirming active rule enforcement at the edge and preventing malicious payloads from reaching the web tier.
 
 <h1>6. OBSERVABILITY & LOGGING</h1>
 
