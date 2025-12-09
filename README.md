@@ -32,9 +32,14 @@ This shows independent Auto Scaling Groups for the web and application tiers, ea
 
 <h2>4.3 ALB Configuration</h2>
 
-<h2>4.4 Target Group Health Status</h2>
+<img width="6079" height="4591" alt="Code Analysis (1)" src="https://github.com/user-attachments/assets/93bbe7c1-de69-4aa5-a1da-954a9c16452c" />
 
-<h2>4.5 RDS Multi-AZ Configuration</h2>
+Internet-facing ALB deployed across multiple availability zones, serving as the sole ingress path into the web tier. It performs health-based routing to EC2 instances and enforces edge-level security through attached AWS WAF policies before any traffic enters the VPC.
+
+<h2>4.4 RDS Multi-AZ Configuration</h2>
+
+RDS MySQL instance deployed in private subnets with Multi-AZ standby maintained by AWS for automatic failover. The database is not publicly accessible and only reachable from the application tier through tightly scoped security groups, ensuring isolation, controlled ingress, and fault tolerance at the data layer.
+<img width="1357" height="495" alt="Screenshot 2025-12-09 135112" src="https://github.com/user-attachments/assets/1fd8a21b-7e29-42c2-8762-f2ad1f0dffb7" />
 
 <h1>5. SECURITY CONTROLS</h1>
 
