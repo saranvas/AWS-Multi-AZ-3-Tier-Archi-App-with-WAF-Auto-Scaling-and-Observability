@@ -7,23 +7,103 @@
 This project implements a multi-AZ 3-tier architecture on AWS with an internet-facing Application Load Balancer fronted by AWS WAF, auto-scaled EC2 instances distributed across availability zones for the web and application tiers, and a **RDS** primary-replica cluster isolated in private subnets for the database tier. Traffic enters through **WAF**, is routed by the **ALB** to the **EC2** tier based on health checks, and database access remains restricted to the private network boundary. Full observability is enabled through **ALB access logging**, **connection logging** and **health check logging** to **S3**, **VPC Flow Logs** to **CloudWatch**, and custom **CloudWatch dashboards** tracking **EC2**, internet facing **ALB**, and **Aurora** performance metrics, ensuring visibility into traffic patterns, security events, and backend resource health.
 
 
-<h1>2. KEY COMPONENTS</h1>
+<h1>2. KEY FEATURES</h1>
+## 🚀 Core Architecture
 
-- **VPC & Subnets (Public / Private, Multi-AZ)**
-Multi-AZ VPC layout with distinct public subnets for ingress via ALB and private subnets for application and database tiers. All compute and database resources remain isolated from direct internet exposure, ensuring controlled ingress only through the load balancer.
+### **3-Tier Isolation**
+- Web Tier (**Public subnets**)
+- App Tier (**Private subnets**)
+- DB Tier (**Private subnets, no public access**)
 
-- **ALB + WAF**
-Internet-facing Application Load Balancer integrated with AWS WAF to inspect and filter inbound traffic before it reaches the web tier. Core rule sets, known bad input filters, and IP reputation controls block malicious payloads and scanning attempts, enforcing security at the edge.
+### **Multi-AZ Deployment**
+- Redundant compute, database, and load balancing across AZs
 
-- **Web/App EC2 + Auto Scaling**
-EC2 instances distributed across multiple availability zones within an Auto Scaling Group. Health-checked by ALB, instances scale out based on demand and replace unhealthy nodes automatically, maintaining application uptime without manual intervention.
+### **Ingress Protection**
+- AWS WAF applied at entry point **before ALB**
 
-- **RDS Primary/Standby**
-RDS is deployed in private subnets with a primary instance and Multi-AZ standby replica managed by AWS for failover. The database is not publicly accessible and only accepts traffic from the application tier through tightly scoped security groups, ensuring isolation and controlled access at the data layer.
+### **Dual Load Balancer Setup**
+- **Public ALB → Web Tier**
+- **Internal ALB → App Tier**
 
-- **Logging & Monitoring (Flow Logs, ALB Logs, CloudWatch Dashboard)**
-Operational visibility is enabled through ALB access logs stored in S3, VPC Flow Logs streamed to CloudWatch for network-level insight, and centralized CloudWatch dashboards tracking EC2 performance, Aurora health metrics, and ALB request behavior for real-time and post-incident analysis.
-<h1>OBSERVABILITY & MONITORING</h1>
+
+---
+
+## 🏗 Compute & Scaling
+
+### **Separate Auto Scaling Groups**
+- `WEB-ASG` (public-tier scaling)
+- `APP-ASG` (private-tier scaling)
+
+### **Health-Based Replacement & Scaling**
+- Automatic instance recycling on health check failure
+- Self-healing and scaling with **zero-touch failover**
+
+
+---
+
+## 🔐 Security Controls
+
+### **AWS WAF Blocking**
+- SQL injection signatures
+- Bad input exploitation patterns
+- Bot traffic + IP reputation abuse
+
+### **Network ACL & Security Group Hardening**
+- Strict tier-to-tier access only
+- No open database ports to public internet
+
+### **Private RDS with Standby**
+- Multi-AZ deployment with automatic failover to standby
+
+
+---
+
+## 📊 Observability & Monitoring
+
+### **CloudWatch Dashboard**
+- CPU utilization
+- Network throughput
+- Instance & target health checks
+- HTTP response visibility
+
+### **VPC Flow Logs**
+- Accepted vs rejected packet-level traffic visibility
+
+### **ALB Telemetry**
+- Access logs → Amazon S3
+- Connection logs → Amazon S3
+- Health check logs → Amazon S3
+
+### **WAF Metrics**
+- Top triggered rules
+- Blocked vs allowed traffic graphs
+
+
+---
+
+## 🔎 Verification & Evidence
+
+### **WAF Validation**
+- Simulated malicious request returned `403 Forbidden`
+
+### **Load Balancer Health**
+- Unhealthy targets auto-deregistered and replaced by ASG
+
+### **DB Failover Visibility**
+- Primary + standby monitoring across AZs with automatic failover
+
+
+---
+
+## 💡 Key Outcomes
+
+- Achieved **fault tolerance, zero public DB exposure, and automated healing**
+- Full end-to-end traceability using CloudWatch, S3 logs, and Flow Logs
+- Demonstrated enterprise-grade ingress filtering (**WAF + ALB**)
+- Real operational monitoring with live traffic logs, **not lab screenshots**
+
+
+<h1>3. OBSERVABILITY & MONITORING</h1>
 
 - VPC Flow Logs enabled to capture ALL traffic at the VPC level for network troubleshooting and security analysis (delivered to CloudWatch Logs).
 
