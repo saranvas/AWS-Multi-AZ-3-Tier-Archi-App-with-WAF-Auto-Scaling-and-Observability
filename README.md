@@ -1,14 +1,13 @@
-<h1>1. ARCHITECTURE DIAGRAM</h1>
+<h1>1. ARCHITECTURE DIAGRAM & OVERVIEW</h1>
 
 <img width="14618" height="10348" alt="Code Analysis (5)" src="https://github.com/user-attachments/assets/339fcdfb-8030-4ad4-b5f2-e1eeb937259e" />
 
 
-<h1>2. OVERVIEW</h1>
 
 This project implements a multi-AZ 3-tier architecture on AWS with an internet-facing Application Load Balancer fronted by AWS WAF, auto-scaled EC2 instances distributed across availability zones for the web and application tiers, and a **RDS** primary-replica cluster isolated in private subnets for the database tier. Traffic enters through **WAF**, is routed by the **ALB** to the **EC2** tier based on health checks, and database access remains restricted to the private network boundary. Full observability is enabled through **ALB access logging**, **connection logging** and **health check logging** to **S3**, **VPC Flow Logs** to **CloudWatch**, and custom **CloudWatch dashboards** tracking **EC2**, internet facing **ALB**, and **Aurora** performance metrics, ensuring visibility into traffic patterns, security events, and backend resource health.
 
 
-<h1>3. KEY COMPONENTS</h1>
+<h1>2. KEY COMPONENTS</h1>
 
 - **VPC & Subnets (Public / Private, Multi-AZ)**
 Multi-AZ VPC layout with distinct public subnets for ingress via ALB and private subnets for application and database tiers. All compute and database resources remain isolated from direct internet exposure, ensuring controlled ingress only through the load balancer.
@@ -24,6 +23,13 @@ RDS is deployed in private subnets with a primary instance and Multi-AZ standby 
 
 - **Logging & Monitoring (Flow Logs, ALB Logs, CloudWatch Dashboard)**
 Operational visibility is enabled through ALB access logs stored in S3, VPC Flow Logs streamed to CloudWatch for network-level insight, and centralized CloudWatch dashboards tracking EC2 performance, Aurora health metrics, and ALB request behavior for real-time and post-incident analysis.
+<h1>OBSERVABILITY & MONITORING</h1>
+
+- VPC Flow Logs enabled to capture ALL traffic at the VPC level for network troubleshooting and security analysis (delivered to CloudWatch Logs).
+
+- ALB Access Logs stored in a dedicated S3 bucket for HTTP-level visibility, performance analysis, and auditing.
+  
+- CloudWatch Dashboard aggregating key metrics from ALB, EC2, and RDS (CPU, network, status checks, DB connections, IOPS) for a single-pane operational view.
 
 <h1>4. DEPLOYMENT TOPOLOGY</h1>
 
@@ -92,6 +98,11 @@ Flow Logs are enabled for the entire VPC with delivery to CloudWatch log streams
 <h2>6.3 CloudWatch Unified Operations Dashboard (Compute, Network & ALB Health)</h2>
 <img width="1345" height="508" alt="Screenshot 2025-12-09 140529" src="https://github.com/user-attachments/assets/a0dc36a2-f2c8-448f-bea8-4f998f143947" />
 Custom dashboard aggregating real-time metrics for web and app EC2 instances along with ALB target status. Panels track CPU utilization, instance/system failures, network throughput (in/out), HTTP response code distribution, and backend connection behavior, providing centralized visibility into workload health and traffic patterns across tiers.
-<h2></h2>
+<h2>6.4 Deployed Application</h2>
+<img width="1349" height="644" alt="Screenshot 2025-12-08 185054" src="https://github.com/user-attachments/assets/576a309d-4460-4a85-aa5b-bf065877f808" />
+
+<img width="10667" height="2646" alt="Code Analysis (6)" src="https://github.com/user-attachments/assets/3df63ca2-7b83-4869-bcaf-62f8e95b1b72" />
+
+
 
 
