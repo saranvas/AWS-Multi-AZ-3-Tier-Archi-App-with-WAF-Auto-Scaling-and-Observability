@@ -55,16 +55,38 @@ Dashboard confirms active inspection and rule execution at the edge, showing blo
 
 <h2>5.3 WAF Runtime Validation (sqlmap Block Test)</h2>
 <img width="690" height="131" alt="Screenshot 2025-12-09 124638" src="https://github.com/user-attachments/assets/636c7404-3c14-4298-9d48-4edc1c1c044b" />
+
 A simulated attack request using the sqlmap/1.7 scanner signature was sent to the external ALB. WAF intercepted the request and returned 403 Forbidden, confirming active rule enforcement at the edge and preventing malicious payloads from reaching the web tier.
 
 <h1>6. OBSERVABILITY & LOGGING</h1>
 
-<h2>6.1 ALB Access Logs in S3</h2>
+<h2>6.1 ALB Logs in S3</h2>
+
+- **ALB Access Logs Stored in S3** (Request Activity Capture)
+<img width="1365" height="506" alt="Screenshot 2025-12-09 135825" src="https://github.com/user-attachments/assets/b497de39-2a4f-4a17-9aae-f8482ae0afa4" />
+
+Access logs from the external ALB are continuously delivered to S3, recording client IPs, request paths, response codes, and latency metrics. This confirms end-to-end visibility into inbound traffic and load balancer behavior across availability zones.
+
+- **ALB Connection Logs in S3** (Client Session Visibility)
+<img width="1365" height="481" alt="Screenshot 2025-12-09 135906" src="https://github.com/user-attachments/assets/0ad13257-0eee-4c4c-b3a5-29fef2ea91fa" />
+
+Connection-level logs are captured and stored in S3, providing detailed handshake and connection metrics for each client session. This enables traceability of connection attempts, terminations, and idle timeouts, supporting security auditing and traffic analysis.
+- **ALB Health Check Logs in S3** (Target Availability Monitoring)
+
+Health check logs show continuous probing of registered targets by the ALB, with results delivered to S3. This verifies active monitoring of backend EC2 instances and accurate detection of unhealthy nodes, supporting Auto Scaling replacement and routing decisions.
+<img width="1363" height="483" alt="Screenshot 2025-12-09 135947" src="https://github.com/user-attachments/assets/d6dfb2eb-67aa-4437-9d79-19d286e0cf09" />
+
 
 <h2>6.2 VPC Flow Logs Enabled</h2>
 
-<h2>6.3 CloudWatch Dashboard</h2>
+<img width="1164" height="154" alt="Screenshot 2025-12-09 140137" src="https://github.com/user-attachments/assets/a4b3c2cd-1bb5-4c60-b0c6-4a6cfc7456ef" />
+<img width="1336" height="505" alt="Screenshot 2025-12-09 140421" src="https://github.com/user-attachments/assets/2eab68f9-97c6-49ce-9e30-3f63aa4d1cd6" />
 
+Flow Logs are enabled for the entire VPC with delivery to CloudWatch log streams, capturing accept/deny records for all inbound and outbound network traffic across ENIs. This provides packet-level visibility for diagnosing routing issues, tracking unwanted access attempts, and validating security group and NACL enforcement.
+
+<h2>6.3 CloudWatch Unified Operations Dashboard (Compute, Network & ALB Health)</h2>
+<img width="1345" height="508" alt="Screenshot 2025-12-09 140529" src="https://github.com/user-attachments/assets/a0dc36a2-f2c8-448f-bea8-4f998f143947" />
+Custom dashboard aggregating real-time metrics for web and app EC2 instances along with ALB target status. Panels track CPU utilization, instance/system failures, network throughput (in/out), HTTP response code distribution, and backend connection behavior, providing centralized visibility into workload health and traffic patterns across tiers.
 <h2></h2>
 
 
